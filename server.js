@@ -4,28 +4,19 @@ const path = require("path");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir arquivos estáticos (uploads)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 // Importar rotas
-const userRoutes = require("./routes/users");
-const animalRoutes = require("./routes/animals");
-const adoptionInterestRoutes = require("./routes/adoptionInterests");
-const testimonialRoutes = require("./routes/testimonials");
-const reportRoutes = require("./routes/reports");
+const userRoutes = require("./src/routes/users");
+const animalRoutes = require("./src/routes/animals");
 
 // Usar rotas
 app.use("/api/users", userRoutes);
 app.use("/api/animals", animalRoutes);
-app.use("/api/adoption-interests", adoptionInterestRoutes);
-app.use("/api/testimonials", testimonialRoutes);
-app.use("/api/reports", reportRoutes);
 
 // Rota de teste
 app.get("/", (req, res) => {
@@ -33,19 +24,9 @@ app.get("/", (req, res) => {
         message: "🐾 Bem-vindo à API do Laços de Pata! 🐾",
         version: "1.0.0",
         description: "Backend para projeto de adoção de animais",
-        pages: {
-            home: "GET /api/animals/featured/animals - Animais em destaque",
-            listagem: "GET /api/animals - Lista todos os animais com filtros",
-            detalhes: "GET /api/animals/:id - Detalhes de um animal específico",
-            sobre_mim: "GET /api/users/protectors - Lista ONGs e protetores",
-            depoimentos: "GET /api/testimonials - Lista depoimentos aprovados"
-        },
         endpoints: {
             users: "/api/users", 
-            animals: "/api/animals",
-            adoption_interests: "/api/adoption-interests",
-            testimonials: "/api/testimonials",
-            reports: "/api/reports"
+            animals: "/api/animals"
         }
     });
 });
@@ -65,7 +46,6 @@ app.use("*", (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
     console.log(`📍 Acesse: http://localhost:${PORT}`);
-    console.log(`📖 Documentação da API: http://localhost:${PORT}`);
 });
 
 module.exports = app;
