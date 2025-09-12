@@ -59,16 +59,39 @@ exports.create = async (req, res) => {
             rescue_story, special_needs, user_id 
         } = req.body;
         
-        if (!name || !species || !age_category || !size || !gender || !user_id) {
-            return res.status(400).json({ error: 'name, species, age_category, size, gender e user_id são obrigatórios' });
+        // ✅ CORREÇÃO: user_id NÃO é obrigatório (animais de rua podem não ter)
+        if (!name || !species || !age_category || !size || !gender) {
+            return res.status(400).json({ error: 'name, species, age_category, size e gender são obrigatórios' });
+        }
+
+        // ✅ VALIDAÇÃO DAS OPÇÕES PERMITIDAS
+        const validSpecies = ['cachorro', 'gato', 'outro'];
+        const validAgeCategories = ['filhote', 'jovem', 'adulto', 'idoso'];
+        const validSizes = ['pequeno', 'medio', 'grande'];
+        const validGenders = ['macho', 'femea'];
+
+        if (!validSpecies.includes(species)) {
+            return res.status(400).json({ error: 'species deve ser: cachorro, gato ou outro' });
+        }
+
+        if (!validAgeCategories.includes(age_category)) {
+            return res.status(400).json({ error: 'age_category deve ser: filhote, jovem, adulto ou idoso' });
+        }
+
+        if (!validSizes.includes(size)) {
+            return res.status(400).json({ error: 'size deve ser: pequeno, medio ou grande' });
+        }
+
+        if (!validGenders.includes(gender)) {
+            return res.status(400).json({ error: 'gender deve ser: macho ou femea' });
         }
 
         const photo = req.file ? req.file.filename : null;
 
         const animal = await Animal.create(
-            name, species, breed, age_category, size, gender, description,
-            medical_history, personality, is_vaccinated, is_neutered,
-            rescue_story, special_needs, photo, user_id
+            name, species, breed || 'SRD', age_category, size, gender, description,
+            medical_history, personality, is_vaccinated || false, is_neutered || false,
+            rescue_story, special_needs, photo, user_id || null // ✅ user_id pode ser null
         );
         
         res.status(201).json(animal);
