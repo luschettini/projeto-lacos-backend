@@ -1,7 +1,5 @@
 # 🐾 Laços de Pata - API Documentation
 
-# 🐾 Laços de Pata - API Documentation
-
 ## 📋 Sobre o Projeto
 Backend para aplicação de adoção de animais que conecta ONGs, protetores independentes e adotantes.
 

@@ -294,6 +294,7 @@ GET http://localhost:3002/api/users/protectors
 ```
 GET http://localhost:3002/api/users?type=ong&city=São Paulo
 ```
+<<<<<<< HEAD
 
 ---
 
@@ -318,3 +319,5 @@ Os testes cobrem:
 - ✅ Tratamento de erros
 - ✅ Parâmetros de consulta
 - ✅ Casos extremos
+=======
+>>>>>>> d6a9066901e4a90ca627fd761d7088ae49df4116
