@@ -4,7 +4,7 @@
 
 ## Base URL
 ```
-http://localhost:3002/api
+http://localhost:3002
 ```
 
 ---
