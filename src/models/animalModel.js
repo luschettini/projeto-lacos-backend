@@ -1,21 +1,17 @@
 const pool = require('../config/database');
 
 class Animal {
-    static async findAll(filters = {}) {
+    // Animais já adotados (com responsável) para depoimentos
+    static async findAllWithOwners(filters = {}) {
         try {
-            console.log('🔍 Tentando buscar todos os animais...');
-            
             let query = `
-                SELECT a.*, u.name as owner_name, u.phone as owner_phone, u.city as owner_city 
-                FROM animals a 
-                JOIN users u ON a.user_id = u.id 
-                WHERE a.is_available = true
+                SELECT a.*, u.name as owner_name, u.phone as owner_phone, u.city as owner_city, u.email as owner_email
+                FROM animals a
+                JOIN users u ON a.user_id = u.id
+                WHERE a.user_id IS NOT NULL
             `;
-            
             const values = [];
             let paramCount = 1;
-            
-            // Aplicar filtros
             if (filters.species) {
                 query += ` AND a.species = $${paramCount}`;
                 values.push(filters.species);
@@ -41,16 +37,54 @@ class Animal {
                 values.push(`%${filters.city}%`);
                 paramCount++;
             }
-            
             query += ` ORDER BY a.created_at DESC`;
-            
             const result = await pool.query(query, values);
-            console.log('✅ Animais encontrados:', result.rows.length);
             return result.rows;
         } catch (error) {
-            console.error('❌ Erro ao buscar animais:', error.message);
             throw error;
         }
+    }
+    static async findAll(filters = {}) {
+            try {
+                console.log('🔍 Tentando buscar todos os animais disponíveis para adoção...');
+                let query = `
+                    SELECT a.*
+                    FROM animals a
+                    WHERE a.is_available = true AND a.user_id IS NULL
+                `;
+                const values = [];
+                let paramCount = 1;
+                
+
+                if (filters.species) {
+                    query += ` AND a.species = $${paramCount}`;
+                    values.push(filters.species);
+                    paramCount++;
+                }
+                if (filters.size) {
+                    query += ` AND a.size = $${paramCount}`;
+                    values.push(filters.size);
+                    paramCount++;
+                }
+                if (filters.age_category) {
+                    query += ` AND a.age_category = $${paramCount}`;
+                    values.push(filters.age_category);
+                    paramCount++;
+                }
+                if (filters.gender) {
+                    query += ` AND a.gender = $${paramCount}`;
+                    values.push(filters.gender);
+                    paramCount++;
+                }
+            
+                query += ` ORDER BY a.created_at DESC`;
+                const result = await pool.query(query, values);
+                console.log('✅ Animais disponíveis encontrados:', result.rows.length);
+                return result.rows;
+            } catch (error) {
+                console.error('❌ Erro ao buscar animais disponíveis:', error.message);
+                throw error;
+            }
     }
 
     static async findById(id) {

@@ -59,12 +59,11 @@ exports.create = async (req, res) => {
             rescue_story, special_needs, user_id 
         } = req.body;
         
-        // ✅ CORREÇÃO: user_id NÃO é obrigatório (animais de rua podem não ter)
+    
         if (!name || !species || !age_category || !size || !gender) {
             return res.status(400).json({ error: 'name, species, age_category, size e gender são obrigatórios' });
         }
 
-        // ✅ VALIDAÇÃO DAS OPÇÕES PERMITIDAS
         const validSpecies = ['cachorro', 'gato', 'outro'];
         const validAgeCategories = ['filhote', 'jovem', 'adulto', 'idoso'];
         const validSizes = ['pequeno', 'medio', 'grande'];
@@ -91,7 +90,7 @@ exports.create = async (req, res) => {
         const animal = await Animal.create(
             name, species, breed || 'SRD', age_category, size, gender, description,
             medical_history, personality, is_vaccinated || false, is_neutered || false,
-            rescue_story, special_needs, photo, user_id || null // ✅ user_id pode ser null
+            rescue_story, special_needs, photo, user_id || null // 
         );
         
         res.status(201).json(animal);

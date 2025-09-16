@@ -13,10 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 // Importar rotas
 const userRoutes = require("./src/routes/users");
 const animalRoutes = require("./src/routes/animals");
+const testimonialRoutes = require("./src/routes/testimonials");
 
 // Usar rotas
 app.use("/api/users", userRoutes);
 app.use("/api/animals", animalRoutes);
+app.use("/api/testimonials", testimonialRoutes);
 
 // Rota de teste
 app.get("/", (req, res) => {

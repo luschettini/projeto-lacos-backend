@@ -2,7 +2,6 @@ CREATE DATABASE lacos_de_pata;
 
 \c lacos_de_pata;
 
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -41,6 +40,19 @@ CREATE TABLE animals (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE testimonials (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    animal_id INTEGER REFERENCES animals(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    rating INTEGER DEFAULT 5 CHECK (rating >= 1 AND rating <= 5),
+    is_approved BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Limpar dados existentes antes de inserir novos (opcional)
+TRUNCATE TABLE testimonials, animals, users RESTART IDENTITY CASCADE;
 
 INSERT INTO users (name, email, password, phone, type, city, state, bio) VALUES
 ('ONG Patinhas Carentes', 'contato@patinhascarentes.org', 'patinhas_ong_carentes', '(11)99999-9999', 'ong', 'São Paulo', 'SP', 'ONG dedicada ao resgate e cuidado de animais abandonados há mais de 10 anos.'),
@@ -140,4 +152,15 @@ INSERT INTO animals (name, species, breed, age_category, size, gender, descripti
 
 ('Max', 'cachorro', 'Pastor Alemão', 'adulto', 'grande', 'macho', 'Pastor alemão muito obediente e protetor, ideal para famílias com experiência.', 'Vacinado, castrado, displasia controlada com fisioterapia.', 'Protetor, obediente, leal, inteligente', true, true, 'Foi entregue por família que se mudou para apartamento e não tinha espaço.', 'Exercícios regulares, fisioterapia para displasia', 10),
 
-('Nala', 'gato', 'SRD', 'filhote', 'medio', 'femea', 'Filhote SRD extremamente dócil, parece uma boneca de pelúcia.', 'Vacinas de filhote completas, aguardando castração.', 'Dócil, tranquila, carinhosa, companheira', true, false, 'Nasceu de uma fêmea resgatada grávida de um canil clandestino.', 'Ambiente interno, escovação regular, socialização suave', 14);
+('Nala', 'gato', 'SRD', 'filhote', 'medio', 'femea', 'Filhote SRD extremamente docil, parece uma boneca de pelucia.', 'Vacinas de filhote completas, aguardando castracao.', 'Docil, tranquila, carinhosa, companheira', true, false, 'Nasceu de uma femea resgatada gravida de um canil clandestino.', 'Ambiente interno, escovacao regular, socializacao suave', 14);
+
+
+INSERT INTO testimonials (user_id, animal_id, content, rating, is_approved) VALUES
+(7, 1, 'Adotamos o Bolt atraves desta plataforma e foi uma experiencia incrivel! Ele se adaptou perfeitamente a nossa familia e adora brincar com nossos filhos. O processo foi muito transparente e bem organizado. Recomendamos demais!', 5, true),
+(8, 2, 'A Luna transformou minha vida! Como trabalho home office, ela e minha companhia constante. E uma cadela muito carinhosa e brincalhona. O suporte da equipe durante todo o processo foi excepcional. Muito obrigada!', 5, true),
+(9, 5, 'Decidimos adotar um pet senior e a Mel foi perfeita para nossa casa. Ela e muito tranquila e carinhosa. Mesmo com suas necessidades especiais, o amor que ela nos da e infinito. Valeu muito a pena!', 5, true),
+(13, 4, 'O Thor e um cao incrivel! Muito protetor e carinhoso com toda a familia. Mesmo sendo um pitbull, ele e super docil com as criancas. A plataforma nos ajudou a encontrar exatamente o que procuravamos.', 5, true),
+(14, 9, 'A Mimi e perfeita! Muito carinhosa e se adaptou super bem ao apartamento. Adora ficar no meu colo enquanto trabalho. O processo de adocao foi simples e bem explicado. Estou muito feliz!', 5, true),
+(7, 3, 'Tambem adotamos o Rex recentemente e ele se deu super bem com o Bolt! Mesmo sendo pequeno, ele tem uma personalidade incrivel. Nossa familia esta completa agora com nossos dois companheiros!', 5, true),
+(9, 8, 'A Bella e nossa segunda adocao e estamos apaixonados! Ela e muito docil e se deu muito bem com a Mel. E incrivel ver como dois animais resgatados podem trazer tanta alegria para nossa casa.', 5, true);
+
