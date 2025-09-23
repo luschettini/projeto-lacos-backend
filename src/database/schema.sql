@@ -35,6 +35,10 @@ CREATE TABLE animals (
     special_needs TEXT,
     photo_url VARCHAR(500),
     is_available BOOLEAN DEFAULT true,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    neighborhood VARCHAR(100),
+    address TEXT,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -51,8 +55,6 @@ CREATE TABLE testimonials (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Limpar dados existentes antes de inserir novos (opcional)
-TRUNCATE TABLE testimonials, animals, users RESTART IDENTITY CASCADE;
 
 INSERT INTO users (name, email, password, phone, type, city, state, bio) VALUES
 ('ONG Patinhas Carentes', 'contato@patinhascarentes.org', 'patinhas_ong_carentes', '(11)99999-9999', 'ong', 'São Paulo', 'SP', 'ONG dedicada ao resgate e cuidado de animais abandonados há mais de 10 anos.'),
@@ -85,74 +87,74 @@ INSERT INTO users (name, email, password, phone, type, city, state, bio) VALUES
 
 
 -- ANIMAIS SEM RESPONSÁVEL (SEM user_id)
-INSERT INTO animals (name, species, breed, age_category, size, gender, description, medical_history, personality, is_vaccinated, is_neutered, rescue_story, special_needs) VALUES
-('Caramelo', 'cachorro', 'SRD', 'adulto', 'medio', 'macho', 'Cão amarelo muito dócil encontrado vagando pelas ruas do centro.', 'Aparenta estar saudável, mas precisa de exames veterinários.', 'Dócil, carinhoso, um pouco tímido', false, false, 'Vive nas ruas há meses, conhecido pelos comerciantes locais.', 'Precisa de cuidados veterinários urgentes'),
+INSERT INTO animals (name, species, breed, age_category, size, gender, description, medical_history, personality, is_vaccinated, is_neutered, rescue_story, special_needs, city, state, neighborhood) VALUES
+('Caramelo', 'cachorro', 'SRD', 'adulto', 'medio', 'macho', 'Cão amarelo muito dócil encontrado vagando pelas ruas do centro.', 'Aparenta estar saudável, mas precisa de exames veterinários.', 'Dócil, carinhoso, um pouco tímido', false, false, 'Vive nas ruas há meses, conhecido pelos comerciantes locais.', 'Precisa de cuidados veterinários urgentes', 'São Paulo', 'SP', 'Centro'),
 
-('Pretinha', 'cachorro', 'SRD', 'idoso', 'pequeno', 'femea', 'Cadela idosa de rua, muito carinhosa apesar das dificuldades.', 'Visível desnutrição, possíveis problemas articulares.', 'Carinhosa, grata, resiliente', false, false, 'Abandonada na praça central, sobrevive da bondade das pessoas.', 'Cuidados geriátricos urgentes'),
+('Pretinha', 'cachorro', 'SRD', 'idoso', 'pequeno', 'femea', 'Cadela idosa de rua, muito carinhosa apesar das dificuldades.', 'Visível desnutrição, possíveis problemas articulares.', 'Carinhosa, grata, resiliente', false, false, 'Abandonada na praça central, sobrevive da bondade das pessoas.', 'Cuidados geriátricos urgentes', 'Rio de Janeiro', 'RJ', 'Copacabana'),
 
-('Frajola', 'gato', 'SRD', 'jovem', 'medio', 'macho', 'Gato preto e branco muito esperto, consegue se virar sozinho.', 'Aparenta boa saúde, mas não foi examinado.', 'Independente, esperto, observador', false, false, 'Vive em colônia de gatos no bairro industrial.', 'Castração necessária'),
+('Frajola', 'gato', 'SRD', 'jovem', 'medio', 'macho', 'Gato preto e branco muito esperto, consegue se virar sozinho.', 'Aparenta boa saúde, mas não foi examinado.', 'Independente, esperto, observador', false, false, 'Vive em colônia de gatos no bairro industrial.', 'Castração necessária', 'Belo Horizonte', 'MG', 'Industrial'),
 
-('Mel de Rua', 'cachorro', 'SRD', 'jovem', 'grande', 'femea', 'Cadela grande e dócil que apareceu na porta de uma escola.', 'Sem histórico médico, precisa de avaliação.', 'Dócil, protetora de crianças, gentil', false, false, 'Apareceu na escola e se tornou mascote não oficial.', 'Precisa de lar definitivo'),
+('Mel de Rua', 'cachorro', 'SRD', 'jovem', 'grande', 'femea', 'Cadela grande e dócil que apareceu na porta de uma escola.', 'Sem histórico médico, precisa de avaliação.', 'Dócil, protetora de crianças, gentil', false, false, 'Apareceu na escola e se tornou mascote não oficial.', 'Precisa de lar definitivo', 'Salvador', 'BA', 'Pelourinho'),
 
-('Branquinho', 'gato', 'SRD', 'adulto', 'pequeno', 'macho', 'Gato branco encontrado ferido em construção abandonada.', 'Ferimento na pata, em processo de cicatrização.', 'Desconfiado, mas carinhoso quando ganha confiança', false, false, 'Encontrado machucado, aparenta ter sido abandonado.', 'Medicação para ferimento'),
+('Branquinho', 'gato', 'SRD', 'adulto', 'pequeno', 'macho', 'Gato branco encontrado ferido em construção abandonada.', 'Ferimento na pata, em processo de cicatrização.', 'Desconfiado, mas carinhoso quando ganha confiança', false, false, 'Encontrado machucado, aparenta ter sido abandonado.', 'Medicação para ferimento', 'Fortaleza', 'CE', 'Meireles'),
 
-('Peluda', 'cachorro', 'SRD', 'adulto', 'medio', 'femea', 'Cadela de pelagem longa, muito maternal com outros animais.', 'Sinais de ter amamentado recentemente, sem filhotes encontrados.', 'Maternal, protetora, carinhosa', false, false, 'Encontrada sozinha, aparenta ter perdido os filhotes.', 'Avaliação reprodutiva necessária'),
+('Peluda', 'cachorro', 'SRD', 'adulto', 'medio', 'femea', 'Cadela de pelagem longa, muito maternal com outros animais.', 'Sinais de ter amamentado recentemente, sem filhotes encontrados.', 'Maternal, protetora, carinhosa', false, false, 'Encontrada sozinha, aparenta ter perdido os filhotes.', 'Avaliação reprodutiva necessária', 'Curitiba', 'PR', 'Batel'),
 
-('Rajado', 'gato', 'SRD', 'filhote', 'pequeno', 'macho', 'Filhote de gato rajado, muito brincalhão e esperto.', 'Aparenta boa saúde, precisa de vacinas de filhote.', 'Brincalhão, curioso, ativo', false, false, 'Encontrado órfão em caixa de papelão no mercado.', 'Vacinas de filhote urgentes'),
+('Rajado', 'gato', 'SRD', 'filhote', 'pequeno', 'macho', 'Filhote de gato rajado, muito brincalhão e esperto.', 'Aparenta boa saúde, precisa de vacinas de filhote.', 'Brincalhão, curioso, ativo', false, false, 'Encontrado órfão em caixa de papelão no mercado.', 'Vacinas de filhote urgentes', 'Porto Alegre', 'RS', 'Centro Histórico'),
 
-('Grandão', 'cachorro', 'SRD', 'adulto', 'grande', 'macho', 'Cão de grande porte, muito dócil apesar do tamanho.', 'Subnutrido, precisa ganhar peso.', 'Gentil, calmo, grato', false, false, 'Abandonado em estrada, caminhoneiros davam comida.', 'Alimentação reforçada'),
+('Grandão', 'cachorro', 'SRD', 'adulto', 'grande', 'macho', 'Cão de grande porte, muito dócil apesar do tamanho.', 'Subnutrido, precisa ganhar peso.', 'Gentil, calmo, grato', false, false, 'Abandonado em estrada, caminhoneiros davam comida.', 'Alimentação reforçada', 'Goiânia', 'GO', 'Setor Central'),
 
-('Pequenina', 'cachorro', 'SRD', 'idoso', 'pequeno', 'femea', 'Cadela pequenininha, aparenta ser muito idosa.', 'Problemas dentários, possível catarata.', 'Tranquila, carinhosa, dependente', false, false, 'Encontrada vagando em bairro residencial.', 'Cuidados geriátricos especiais'),
+('Pequenina', 'cachorro', 'SRD', 'idoso', 'pequeno', 'femea', 'Cadela pequenininha, aparenta ser muito idosa.', 'Problemas dentários, possível catarata.', 'Tranquila, carinhosa, dependente', false, false, 'Encontrada vagando em bairro residencial.', 'Cuidados geriátricos especiais', 'Recife', 'PE', 'Boa Viagem'),
 
-('Malhado', 'gato', 'SRD', 'jovem', 'medio', 'macho', 'Gato malhado muito sociável, se aproxima de pessoas.', 'Aparenta boa saúde geral.', 'Sociável, confiante, carinhoso', false, false, 'Frequenta restaurantes da região em busca de comida.', 'Necessita castração'),
+('Malhado', 'gato', 'SRD', 'jovem', 'medio', 'macho', 'Gato malhado muito sociável, se aproxima de pessoas.', 'Aparenta boa saúde geral.', 'Sociável, confiante, carinhoso', false, false, 'Frequenta restaurantes da região em busca de comida.', 'Necessita castração', 'Florianópolis', 'SC', 'Centro'),
 
-('Dourada', 'cachorro', 'SRD', 'jovem', 'medio', 'femea', 'Cadela de pelagem dourada, muito ativa e inteligente.', 'Boa condição física, aparenta ter vivido em casa.', 'Ativa, inteligente, obediente', false, false, 'Apareceu no bairro há duas semanas, ninguém reclama.', 'Investigar se tem dono'),
+('Dourada', 'cachorro', 'SRD', 'jovem', 'medio', 'femea', 'Cadela de pelagem dourada, muito ativa e inteligente.', 'Boa condição física, aparenta ter vivido em casa.', 'Ativa, inteligente, obediente', false, false, 'Apareceu no bairro há duas semanas, ninguém reclama.', 'Investigar se tem dono', 'Natal', 'RN', 'Ponta Negra'),
 
-('Tigrado', 'gato', 'SRD', 'adulto', 'pequeno', 'macho', 'Gato tigrado muito independente, mas aceita carinho.', 'Cicatriz antiga na orelha, aparenta boa saúde.', 'Independente, territorialista, carinhoso', false, false, 'Vive no território próximo ao cemitério.', 'Monitoramento de saúde'),
+('Tigrado', 'gato', 'SRD', 'adulto', 'pequeno', 'macho', 'Gato tigrado muito independente, mas aceita carinho.', 'Cicatriz antiga na orelha, aparenta boa saúde.', 'Independente, territorialista, carinhoso', false, false, 'Vive no território próximo ao cemitério.', 'Monitoramento de saúde', 'Brasília', 'DF', 'Asa Norte'),
 
-('Café', 'cachorro', 'SRD', 'filhote', 'pequeno', 'macho', 'Filhote marrom como café, muito dócil e carinhoso.', 'Aparenta boa saúde, precisa de vacinas.', 'Dócil, carinhoso, dependente', false, false, 'Encontrado chorando em frente a padaria.', 'Vacinas e vermifugação urgentes'),
+('Café', 'cachorro', 'SRD', 'filhote', 'pequeno', 'macho', 'Filhote marrom como café, muito dócil e carinhoso.', 'Aparenta boa saúde, precisa de vacinas.', 'Dócil, carinhoso, dependente', false, false, 'Encontrado chorando em frente a padaria.', 'Vacinas e vermifugação urgentes', 'Campinas', 'SP', 'Cambuí'),
 
-('Listrada', 'gato', 'SRD', 'jovem', 'pequeno', 'femea', 'Gata com listras distintas, muito esperta e ágil.', 'Boa condição física, aparenta estar grávida.', 'Esperta, ágil, cautelosa', false, false, 'Apareceu grávida procurando local seguro para parir.', 'Cuidados pré-natal'),
+('Listrada', 'gato', 'SRD', 'jovem', 'pequeno', 'femea', 'Gata com listras distintas, muito esperta e ágil.', 'Boa condição física, aparenta estar grávida.', 'Esperta, ágil, cautelosa', false, false, 'Apareceu grávida procurando local seguro para parir.', 'Cuidados pré-natal', 'Joinville', 'SC', 'Zona Industrial'),
 
-('Corajoso', 'cachorro', 'SRD', 'adulto', 'grande', 'macho', 'Cão que protege outros animais menores na rua.', 'Cicatrizes de brigas, mas saudável.', 'Protetor, corajoso, leal', false, false, 'Líder de matilha de rua, protege os menores.', 'Socialização com humanos'),
+('Corajoso', 'cachorro', 'SRD', 'adulto', 'grande', 'macho', 'Cão que protege outros animais menores na rua.', 'Cicatrizes de brigas, mas saudável.', 'Protetor, corajoso, leal', false, false, 'Líder de matilha de rua, protege os menores.', 'Socialização com humanos', 'Manaus', 'AM', 'Centro'),
 
-('Manhosa', 'gato', 'SRD', 'adulto', 'pequeno', 'femea', 'Gata muito carinhosa, sempre pedindo cafuné.', 'Aparenta boa saúde, bem socializada.', 'Carinhosa, manhosa, sociável', false, false, 'Apareceu no bairro pedindo carinho aos moradores.', 'Investigar origem'),
+('Manhosa', 'gato', 'SRD', 'adulto', 'pequeno', 'femea', 'Gata muito carinhosa, sempre pedindo cafuné.', 'Aparenta boa saúde, bem socializada.', 'Carinhosa, manhosa, sociável', false, false, 'Apareceu no bairro pedindo carinho aos moradores.', 'Investigar origem', 'Cuiabá', 'MT', 'Centro Norte'),
 
-('Aventureiro', 'cachorro', 'SRD', 'jovem', 'medio', 'macho', 'Cão jovem muito explorador, sempre em movimento.', 'Boa condição física, muito ativo.', 'Aventureiro, curioso, energético', false, false, 'Visto explorando diferentes bairros da cidade.', 'Precisa de ambiente seguro');
+('Aventureiro', 'cachorro', 'SRD', 'jovem', 'medio', 'macho', 'Cão jovem muito explorador, sempre em movimento.', 'Boa condição física, muito ativo.', 'Aventureiro, curioso, energético', false, false, 'Visto explorando diferentes bairros da cidade.', 'Precisa de ambiente seguro', 'Belém', 'PA', 'Cidade Velha');
 
 -- ANIMAIS COM RESPONSÁVEL (COM user_id) 
-INSERT INTO animals (name, species, breed, age_category, size, gender, description, medical_history, personality, is_vaccinated, is_neutered, rescue_story, special_needs, user_id) VALUES
-('Bolt', 'cachorro', 'SRD', 'adulto', 'medio', 'macho', 'Cão muito carinhoso e brincalhão, adora crianças e outros pets.', 'Vacinado, vermifugado e castrado. Exames em dia.', 'Dócil, carinhoso, ativo, obediente', true, true, 'Encontrado abandonado em estrada rural, recuperou-se completamente.', 'Nenhuma necessidade especial', 1),
+INSERT INTO animals (name, species, breed, age_category, size, gender, description, medical_history, personality, is_vaccinated, is_neutered, rescue_story, special_needs, city, state, neighborhood, user_id) VALUES
+('Bolt', 'cachorro', 'SRD', 'adulto', 'medio', 'macho', 'Cão muito carinhoso e brincalhão, adora crianças e outros pets.', 'Vacinado, vermifugado e castrado. Exames em dia.', 'Dócil, carinhoso, ativo, obediente', true, true, 'Encontrado abandonado em estrada rural, recuperou-se completamente.', 'Nenhuma necessidade especial', 'São Paulo', 'SP', 'Vila Madalena', 1),
 
-('Luna', 'cachorro', 'Labrador', 'filhote', 'grande', 'femea', 'Filhote alegre e cheia de energia, perfeita para famílias ativas.', 'Vacinas de filhote em dia, aguardando castração.', 'Brincalhona, energética, sociável', true, false, 'Nasceu no canil após mãe ser resgatada grávida.', 'Precisa de bastante exercício', 2),
+('Luna', 'cachorro', 'Labrador', 'filhote', 'grande', 'femea', 'Filhote alegre e cheia de energia, perfeita para famílias ativas.', 'Vacinas de filhote em dia, aguardando castração.', 'Brincalhona, energética, sociável', true, false, 'Nasceu no canil após mãe ser resgatada grávida.', 'Precisa de bastante exercício', 'Rio de Janeiro', 'RJ', 'Ipanema', 2),
 
-('Rex', 'cachorro', 'SRD', 'adulto', 'pequeno', 'macho', 'Pequeno mas corajoso, ótimo cão de companhia para apartamentos.', 'Vacinado e castrado, saudável.', 'Corajoso, companheiro, adaptável', true, true, 'Vivia nas ruas do centro da cidade, se adaptou perfeitamente à vida doméstica.', 'Nenhuma necessidade especial', 3),
+('Rex', 'cachorro', 'SRD', 'adulto', 'pequeno', 'macho', 'Pequeno mas corajoso, ótimo cão de companhia para apartamentos.', 'Vacinado e castrado, saudável.', 'Corajoso, companheiro, adaptável', true, true, 'Vivia nas ruas do centro da cidade, se adaptou perfeitamente à vida doméstica.', 'Nenhuma necessidade especial', 'Belo Horizonte', 'MG', 'Centro', 3),
 
-('Thor', 'cachorro', 'Pitbull', 'adulto', 'grande', 'macho', 'Cão protetor e leal, ideal para quem busca um guardião da família.', 'Castrado, vacinado, displasia leve controlada.', 'Protetor, leal, inteligente, calmo', true, true, 'Abandonado por família que se mudou para apartamento pequeno.', 'Displasia leve, exercícios moderados', 4),
+('Thor', 'cachorro', 'Pitbull', 'adulto', 'grande', 'macho', 'Cão protetor e leal, ideal para quem busca um guardião da família.', 'Castrado, vacinado, displasia leve controlada.', 'Protetor, leal, inteligente, calmo', true, true, 'Abandonado por família que se mudou para apartamento pequeno.', 'Displasia leve, exercícios moderados', 'Joinville', 'SC', 'Centro', 4),
 
-('Mel', 'cachorro', 'Golden Retriever', 'idoso', 'grande', 'femea', 'Cadela idosa muito doce, perfeita para lares que valorizam pets sênior.', 'Castrada, vacinada, tratamento para artrite.', 'Calma, doce, carinhosa, tranquila', true, true, 'Entregue quando a família teve dificuldades financeiras para cuidar dela.', 'Artrite, medicação diária, exercícios leves', 5),
+('Mel', 'cachorro', 'Labrador', 'idoso', 'grande', 'femea', 'Cadela idosa muito doce, perfeita para lares que valorizam pets sênior.', 'Castrada, vacinada, tratamento para artrite.', 'Calma, doce, carinhosa, tranquila', true, true, 'Entregue quando a família teve dificuldades financeiras para cuidar dela.', 'Artrite, medicação diária, exercícios leves', 'Fortaleza', 'CE', 'Meireles', 5),
 
-('Pipoca', 'cachorro', 'Pinscher', 'adulto', 'pequeno', 'femea', 'Pequena e cheia de personalidade, cão pequeno com atitude de grande.', 'Vacinada, castrada, tratamento dentário recente.', 'Esperta, corajosa, territorial', true, true, 'Abandonada quando os donos tiveram um bebê e não quiseram mais ela.', 'Socialização gradual com crianças', 1),
+('Pipoca', 'cachorro', 'Pitbull', 'adulto', 'pequeno', 'femea', 'Cheia de personalidade, muito amorosa e protetora.', 'Vacinada, castrada, tratamento dentário recente.', 'Esperta, corajosa, territorial', true, true, 'Abandonada quando os donos tiveram um bebê e não quiseram mais ela.', 'Socialização gradual com crianças', 'São Paulo', 'SP', 'Liberdade', 1),
 
-('Toby', 'cachorro', 'Poodle', 'filhote', 'pequeno', 'macho', 'Filhote de poodle muito inteligente e carinhoso, pelagem cacheada linda.', 'Vacinas de filhote completas, aguardando castração.', 'Inteligente, ativo, carinhoso, brincalhão', true, false, 'Resgatado quando pet shop fechou durante a pandemia, precisava urgente de novo lar.', 'Escovação regular da pelagem', 2),
+('Toby', 'cachorro', 'SRD', 'filhote', 'pequeno', 'macho', 'Filhote de poodle muito inteligente e carinhoso, pelagem cacheada linda.', 'Vacinas de filhote completas, aguardando castração.', 'Inteligente, ativo, carinhoso, brincalhão', true, false, 'Resgatado quando pet shop fechou durante a pandemia, precisava urgente de novo lar.', 'Escovação regular da pelagem', 'Rio de Janeiro', 'RJ', 'Leblon', 2),
 
-('Bella', 'cachorro', 'Shih Tzu', 'adulto', 'pequeno', 'femea', 'Cadela dócil e companheira, perfeita para apartamentos e famílias tranquilas.', 'Castrada, vacinada, tratamento dentário em dia.', 'Dócil, tranquila, companheira, amorosa', true, true, 'Resgatada de situação de maus tratos, hoje é uma cadela feliz e confiante.', 'Cuidados com os olhos, escovação diária', 3),
+('Bella', 'cachorro', 'Shih Tzu', 'adulto', 'pequeno', 'femea', 'Cadela dócil e companheira, perfeita para apartamentos e famílias tranquilas.', 'Castrada, vacinada, tratamento dentário em dia.', 'Dócil, tranquila, companheira, amorosa', true, true, 'Resgatada de situação de maus tratos, hoje é uma cadela feliz e confiante.', 'Cuidados com os olhos, escovação diária', 'Belo Horizonte', 'MG', 'Funcionários', 3),
 
-('Mimi', 'gato', 'SRD', 'adulto', 'pequeno', 'femea', 'Gata muito carinhosa e tranquila, adora carinho no colo.', 'Castrada, vacinada, saudável.', 'Carinhosa, tranquila, caseira, dengosa', true, true, 'Abandonada quando os donos se mudaram para outro país.', 'Nenhuma necessidade especial', 6),
+('Mimi', 'gato', 'SRD', 'adulto', 'pequeno', 'femea', 'Gata muito carinhosa e tranquila, adora carinho no colo.', 'Castrada, vacinada, saudável.', 'Carinhosa, tranquila, caseira, dengosa', true, true, 'Abandonada quando os donos se mudaram para outro país.', 'Nenhuma necessidade especial', 'Fortaleza', 'CE', 'Aldeota', 6),
 
-('Garfield', 'gato', 'Persa', 'adulto', 'medio', 'macho', 'Gato persa majestoso, precisa de escovação regular.', 'Castrado, vacinado, problemas respiratórios controlados.', 'Calmo, majestoso, carinhoso', true, true, 'Resgatado de casa de acumuladores, recuperou-se totalmente.', 'Escovação diária, cuidados respiratórios', 1),
+('Garfield', 'gato', 'SRD', 'adulto', 'medio', 'macho', 'Gato persa majestoso, precisa de escovação regular.', 'Castrado, vacinado, problemas respiratórios controlados.', 'Calmo, majestoso, carinhoso', true, true, 'Resgatado de casa de acumuladores, recuperou-se totalmente.', 'Escovação diária, cuidados respiratórios', 'São Paulo', 'SP', 'Jardins', 1),
 
-('Nina', 'gato', 'SRD', 'filhote', 'pequeno', 'femea', 'Filhote brincalhona e curiosa, cheia de travessuras típicas.', 'Vacinas de filhote em dia, aguardando castração.', 'Brincalhona, curiosa, ativa, sociável', true, false, 'Encontrada órfã muito pequena, foi criada na mamadeira.', 'Ambiente seguro para explorar', 2),
+('Nina', 'gato', 'SRD', 'filhote', 'pequeno', 'femea', 'Filhote brincalhona e curiosa, cheia de travessuras típicas.', 'Vacinas de filhote em dia, aguardando castração.', 'Brincalhona, curiosa, ativa, sociável', true, false, 'Encontrada órfã muito pequena, foi criada na mamadeira.', 'Ambiente seguro para explorar', 'Rio de Janeiro', 'RJ', 'Botafogo', 2),
 
-('Simba', 'gato', 'SRD', 'adulto', 'medio', 'macho', 'Gato independente mas carinhoso, se dá bem com outros gatos.', 'Castrado, vacinado, chip de identificação.', 'Independente, sociável com gatos', true, true, 'Vivia em colônia de rua, já era socializado com outros felinos.', 'Prefere ambiente com outros gatos', 6),
+('Simba', 'gato', 'SRD', 'adulto', 'medio', 'macho', 'Gato independente mas carinhoso, se dá bem com outros gatos.', 'Castrado, vacinado, chip de identificação.', 'Independente, sociável com gatos', true, true, 'Vivia em colônia de rua, já era socializado com outros felinos.', 'Prefere ambiente com outros gatos', 'Fortaleza', 'CE', 'Cocó', 6),
 
-('Siam', 'gato', 'Siamês', 'adulto', 'medio', 'macho', 'Gato siamês elegante e vocal, muito inteligente e comunicativo.', 'Castrado, vacinado, saudável e ativo.', 'Vocal, inteligente, ativo, comunicativo', true, true, 'Entregue por família que não conseguia lidar com sua personalidade forte.', 'Precisa de estímulo mental e atenção', 5),
+('Siam', 'gato', 'SRD', 'adulto', 'medio', 'macho', 'Gato siamês elegante e vocal, muito inteligente e comunicativo.', 'Castrado, vacinado, saudável e ativo.', 'Vocal, inteligente, ativo, comunicativo', true, true, 'Entregue por família que não conseguia lidar com sua personalidade forte.', 'Precisa de estímulo mental e atenção', 'Fortaleza', 'CE', 'Meireles', 5),
 
-('Zara', 'gato', 'SRD', 'filhote', 'pequeno', 'femea', 'Gatinha SRD muito carinhosa, adora brincar com bolinhas.', 'Vacinas de filhote completas, aguardando castração.', 'Carinhosa, brincalhona, curiosa, ativa', true, false, 'Resgatada de bueiro quando era bebê, cresceu forte e saudável.', 'Ambiente seguro para brincadeiras', 6),
+('Zara', 'gato', 'SRD', 'filhote', 'pequeno', 'femea', 'Gatinha SRD muito carinhosa, adora brincar com bolinhas.', 'Vacinas de filhote completas, aguardando castração.', 'Carinhosa, brincalhona, curiosa, ativa', true, false, 'Resgatada de bueiro quando era bebê, cresceu forte e saudável.', 'Ambiente seguro para brincadeiras', 'Fortaleza', 'CE', 'Papicu', 6),
 
-('Max', 'cachorro', 'Pastor Alemão', 'adulto', 'grande', 'macho', 'Pastor alemão muito obediente e protetor, ideal para famílias com experiência.', 'Vacinado, castrado, displasia controlada com fisioterapia.', 'Protetor, obediente, leal, inteligente', true, true, 'Foi entregue por família que se mudou para apartamento e não tinha espaço.', 'Exercícios regulares, fisioterapia para displasia', 10),
+('Max', 'cachorro', 'Pastor Alemão', 'adulto', 'grande', 'macho', 'Pastor alemão muito obediente e protetor, ideal para famílias com experiência.', 'Vacinado, castrado, displasia controlada com fisioterapia.', 'Protetor, obediente, leal, inteligente', true, true, 'Foi entregue por família que se mudou para apartamento e não tinha espaço.', 'Exercícios regulares, fisioterapia para displasia', 'Goiânia', 'GO', 'Setor Oeste', 10),
 
-('Nala', 'gato', 'SRD', 'filhote', 'medio', 'femea', 'Filhote SRD extremamente docil, parece uma boneca de pelucia.', 'Vacinas de filhote completas, aguardando castracao.', 'Docil, tranquila, carinhosa, companheira', true, false, 'Nasceu de uma femea resgatada gravida de um canil clandestino.', 'Ambiente interno, escovacao regular, socializacao suave', 14);
+('Nala', 'gato', 'SRD', 'filhote', 'medio', 'femea', 'Filhote SRD extremamente docil, parece uma boneca de pelucia.', 'Vacinas de filhote completas, aguardando castracao.', 'Docil, tranquila, carinhosa, companheira', true, false, 'Nasceu de uma femea resgatada gravida de um canil clandestino.', 'Ambiente interno, escovacao regular, socializacao suave', 'Cuiabá', 'MT', 'Centro Norte', 14);
 
 
 INSERT INTO testimonials (user_id, animal_id, content, rating, is_approved) VALUES

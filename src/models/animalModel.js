@@ -93,7 +93,7 @@ class Animal {
                 SELECT a.*, u.name as owner_name, u.phone as owner_phone, 
                        u.email as owner_email, u.city as owner_city, u.bio as owner_bio 
                 FROM animals a 
-                JOIN users u ON a.user_id = u.id 
+                LEFT JOIN users u ON a.user_id = u.id 
                 WHERE a.id = $1
             `, [id]);
             return result.rows[0];
