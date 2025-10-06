@@ -2,13 +2,28 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
+const multer = require("multer");
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Apenas substitua estas duas linhas:
+
+app.use(cors({
+  origin: '*', // ⚠️ Liberal para desenvolvimento
+  credentials: false
+}));
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
 
 // Importar rotas
 const userRoutes = require("./src/routes/users");
