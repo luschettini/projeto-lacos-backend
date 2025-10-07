@@ -1,306 +1,383 @@
-# 🐾 Laços de Pata - API Documentation
+# 🐾 Laços de Pata - Backend
 
-## 📋 Sobre o Projeto
-Backend para aplicação de adoção de animais que conecta ONGs, protetores independentes e adotantes.
+Conectando ONGs, protetores independentes e adotantes para promover a adoção responsável de animais.
 
-### � 5 Páginas do Projeto:
-1. **Home** - Apresenta a missão do projeto, pets em destaque
-2. **Listagem** - Lista todos os animais disponíveis com filtros
-3. **Detalhes** - Exibe informações completas do animal
-4. **Sobre Mim** - Perfil do protetor ou ONG
-5. **Depoimentos** - Depoimentos de pessoas que adotaram animais
+O **Laços de Pata** é uma aplicação web que facilita o processo de adoção de animais, permitindo que ONGs e protetores gerenciem informações de animais disponíveis, enquanto adotantes podem explorar e se conectar com seus futuros companheiros.
 
-## �🚀 Como Executar
+---
+
+## 🚀 Funcionalidades
+- **🏠 Home**: Página inicial com animais em destaque
+- **📋 Listagem**: Lista completa de animais com filtros avançados
+- **📖 Detalhes**: Informações completas sobre cada animal
+- **👤 Sobre Mim**: Perfis de ONGs e protetores independentes
+- **💬 Depoimentos**: Histórias reais de sucesso em adoções
+- **📞 Contato**: Canal direto para comunicação com a equipe
+- **🔍 Filtros Avançados**: Busca por espécie, porte, idade e localização
+- **📤 Upload de Imagens**: Sistema de upload para fotos dos animais
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+- **Backend**: Node.js, Express.js
+- **Banco de Dados**: PostgreSQL
+- **Autenticação**: JWT (JSON Web Token)
+- **Outras Bibliotecas**:
+  - `pg` para integração com PostgreSQL
+  - `dotenv` para gerenciamento de variáveis de ambiente
+  - `multer` para upload de arquivos
+  - `cors` para habilitar requisições entre domínios
+  - `nodemon` para desenvolvimento
+
+---
+
+## 📋 Pré-requisitos
+Antes de começar, certifique-se de ter instalado em sua máquina:
+- **Node.js** (v22.14.0 ou superior)
+- **PostgreSQL** (v13 ou superior)
+- **Git** para controle de versão
+
+### Verificar Instalações
 ```bash
+# Verificar versão do Node.js
+node --version
+
+# Verificar versão do npm
+npm --version
+
+# Verificar versão do Git
+git --version
+```
+
+---
+
+## 🚀 Instalação e Configuração
+
+### 1. Clone o Repositório
+```bash
+# Clone o repositório do backend
+git clone https://github.com/seu-usuario/projeto-lacos-backend.git
+
+# Entre no diretório do projeto
+cd projeto-lacos-backend
+```
+
+### 2. Instale as Dependências
+```bash
+# Instale as dependências do projeto
 npm install
+```
+
+### 3. Configure as Variáveis de Ambiente
+Crie um arquivo `.env` na raiz do projeto e adicione as seguintes variáveis:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=lacos_de_pata
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+PORT=3001
+```
+
+### 4. Configure o Banco de Dados
+```bash
+# Acesse o PostgreSQL
+psql -U postgres
+
+# Crie o banco de dados
+CREATE DATABASE lacos_de_pata;
+
+# Saia do PostgreSQL
+\q
+
+# Execute o script SQL para criar as tabelas e inserir dados iniciais
+psql -U postgres -d lacos_de_pata -f src/database/schema.sql
+```
+
+### 5. Inicie o Servidor
+```bash
+# Inicie o servidor em modo de desenvolvimento
 npm start
 ```
 
-## 🌐 Base URL
-```
-http://localhost:3000/api
-```
-
-## 🔐 Dados
-A API utiliza JSON para comunicação. Todas as respostas e requisições são em formato JSON.
+O backend estará rodando em: `http://localhost:3001`
 
 ---
 
-## 📋 Endpoints por Página
+## 📂 Estrutura do Projeto
+```
+projeto-lacos-backend/
+├── src/
+│   ├── config/
+│   │   └── database.js          # Configuração do banco PostgreSQL
+│   ├── controllers/
+│   │   ├── animalController.js  # Lógica dos endpoints de animais
+│   │   └── userController.js    # Lógica dos endpoints de usuários
+│   ├── database/
+│   │   └── schema.sql           # Script SQL com tabelas e dados
+│   ├── models/
+│   │   ├── animalModel.js       # Modelo de dados dos animais
+│   │   └── userModel.js         # Modelo de dados dos usuários
+│   ├── routes/
+│   │   ├── animals.js           # Rotas dos animais
+│   │   ├── users.js             # Rotas dos usuários
+│   │   └── testimonials.js      # Rotas dos depoimentos
+│   └── uploads/                 # Diretório para upload de imagens
+├── .env                         # Variáveis de ambiente
+├── package.json                 # Dependências e scripts
+├── README.md                    # Documentação do projeto
+└── server.js                    # Arquivo principal do servidor
+```
 
-### 🏠 Página HOME (`/api/animals`)
+---
 
+## 🌐 Exemplos de Uso da API
+
+### 🏠 Página HOME
 #### GET `/api/animals/featured/animals`
-Animais em destaque para a home (últimos 6 cadastrados)
+Retorna os últimos 6 animais cadastrados para exibição na página inicial.
 
-#### GET `/api/animals`
-Todos os animais disponíveis
+**Exemplo de Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Bolt",
+    "species": "cachorro",
+    "breed": "SRD",
+    "age_category": "adulto",
+    "size": "medio",
+    "gender": "macho",
+    "city": "São Paulo",
+    "state": "SP",
+    "photo_url": "/uploads/srd14.png"
+  }
+]
+```
 
 ---
 
-### 📋 Página LISTAGEM (`/api/animals`)
-
+### 📋 Página LISTAGEM
 #### GET `/api/animals`
-Listar animais disponíveis com filtros
-- Query params: `?species=cachorro&size=medio&age_category=adulto&city=São Paulo&gender=macho`
+Lista todos os animais disponíveis para adoção com filtros opcionais.
 
-Exemplo:
+**Query Params:**
+- `species`: Filtrar por espécie (`cachorro`, `gato`, `outro`)
+- `size`: Filtrar por porte (`pequeno`, `medio`, `grande`)
+- `age_category`: Filtrar por faixa etária (`filhote`, `jovem`, `adulto`, `idoso`)
+- `city`: Filtrar por cidade
+- `state`: Filtrar por estado
+
+**Exemplo de Requisição:**
 ```
-GET /api/animals?species=cachorro&size=pequeno
+GET /api/animals?species=cachorro&size=medio&city=São Paulo
+```
+
+**Exemplo de Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Bolt",
+    "species": "cachorro",
+    "breed": "SRD",
+    "age_category": "adulto",
+    "size": "medio",
+    "gender": "macho",
+    "description": "Cão muito carinhoso e brincalhão, adora crianças.",
+    "is_vaccinated": true,
+    "is_neutered": true,
+    "city": "São Paulo",
+    "state": "SP",
+    "photo_url": "/uploads/srd14.png",
+    "created_at": "2025-10-07T12:00:00Z"
+  }
+]
 ```
 
 ---
 
-### 📖 Página DETALHES (`/api/animals/:id`)
-
+### 📖 Página DETALHES
 #### GET `/api/animals/:id`
-Obter informações completas de um animal específico
+Retorna informações completas de um animal específico.
 
-Exemplo:
+**Exemplo de Requisição:**
 ```
 GET /api/animals/1
 ```
 
----
-
-### � Página SOBRE MIM (`/api/users`)
-
-#### GET `/api/users/protectors`
-Listar todas as ONGs e protetores
-
-#### GET `/api/users/:id`
-Obter perfil específico de um protetor/ONG
-
-#### GET `/api/animals/user/:userId`
-Listar animais de um protetor/ONG específico
-
----
-
-### 💬 Página DEPOIMENTOS (`/api/testimonials`)
-
-#### GET `/api/testimonials`
-Listar todos os depoimentos aprovados
-
-#### POST `/api/testimonials`
-Criar novo depoimento
+**Exemplo de Resposta:**
 ```json
 {
-  "adopter_id": 1,
-  "animal_name": "Bolt",
-  "message": "Bolt trouxe muita alegria para nossa família..."
-}
-```
-**Opcional:** Incluir foto como form-data (campo: `photo`)
-
----
-
-## � Endpoints Auxiliares
-
-### 👥 Usuários (`/api/users`)
-
-#### GET `/api/users`
-Listar usuários
-- Query params: `?type=ong` (filtrar por tipo)
-
-#### POST `/api/users`
-Cadastrar novo usuário
-```json
-{
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "password": "senha123",
-  "phone": "(11)99999-9999",
-  "type": "adotante",
-  "address": "Rua das Flores, 123",
-  "city": "São Paulo",
-  "state": "SP",
-  "bio": "Família que ama animais"
-}
-```
-
-### 🐕 Animais (`/api/animals`)
-
-#### POST `/api/animals`
-Cadastrar animal
-```json
-{
+  "id": 1,
   "name": "Bolt",
   "species": "cachorro",
   "breed": "SRD",
   "age_category": "adulto",
   "size": "medio",
   "gender": "macho",
-  "description": "Cão muito carinhoso",
-  "medical_history": "Vacinado",
-  "personality": "Dócil e brincalhão",
+  "description": "Cão muito carinhoso e brincalhão, adora crianças e outros pets.",
+  "medical_history": "Vacinado, vermifugado e castrado. Exames em dia.",
+  "personality": "Dócil, carinhoso, ativo, obediente",
   "is_vaccinated": true,
-  "is_neutered": false,
-  "rescue_story": "Resgatado das ruas...",
-  "special_needs": "Nenhuma",
-  "user_id": 1
+  "is_neutered": true,
+  "rescue_story": "Encontrado abandonado em estrada rural, recuperou-se completamente.",
+  "special_needs": "Nenhuma necessidade especial",
+  "city": "São Paulo",
+  "state": "SP",
+  "neighborhood": "Vila Madalena",
+  "photo_url": "/uploads/srd14.png",
+  "user_id": 1,
+  "created_at": "2025-10-07T12:00:00Z"
 }
 ```
 
-### 💝 Interesse em Adoção (`/api/adoption-interests`)
+---
 
-#### POST `/api/adoption-interests`
-Manifestar interesse
+### 👤 Página SOBRE MIM (Usuários)
+#### GET `/api/users`
+Lista todos os usuários (ONGs e protetores).
+
+**Exemplo de Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "name": "ONG Patinhas Carentes",
+    "email": "contato@patinhascarentes.org",
+    "phone": "(11)99999-9999",
+    "type": "ong",
+    "city": "São Paulo",
+    "state": "SP",
+    "bio": "ONG dedicada ao resgate e cuidado de animais abandonados há mais de 10 anos.",
+    "photo_url": null
+  }
+]
+```
+
+#### GET `/api/users/:id`
+Retorna informações de um usuário específico.
+
+---
+
+### 💬 Página DEPOIMENTOS
+#### GET `/api/testimonials`
+Lista todos os depoimentos aprovados com informações do usuário e animal.
+
+**Exemplo de Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "content": "Adotamos o Bolt através desta plataforma e foi uma experiência incrível!",
+    "rating": 5,
+    "created_at": "2025-10-07T12:00:00Z",
+    "user_id": 7,
+    "user_name": "Carlos e família",
+    "user_email": "carlos.family@email.com",
+    "user_city": "Campinas",
+    "user_state": "SP",
+    "user_phone": "(11)33333-3333",
+    "animal_id": 1,
+    "animal_name": "Bolt",
+    "animal_species": "cachorro",
+    "animal_breed": "SRD",
+    "animal_photo": "/uploads/srd14.png"
+  }
+]
+```
+
+#### POST `/api/testimonials`
+Cria um novo depoimento.
+
+**Exemplo de Requisição:**
 ```json
 {
+  "user_id": 7,
   "animal_id": 1,
-  "adopter_id": 2,
-  "message": "Gostaria de adotar este pet...",
-  "contact_preference": "whatsapp"
+  "content": "Experiência maravilhosa de adoção!",
+  "rating": 5
 }
 ```
 
-#### GET `/api/adoption-interests/animal/:animalId`
-Listar interesses de um animal específico
+---
+
+### 📞 Página CONTATO
+#### POST `/api/contact`
+Envia uma mensagem de contato.
+
+**Exemplo de Requisição:**
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "phone": "(11)99999-9999",
+  "message": "Gostaria de saber mais sobre o processo de adoção."
+}
+```
+
+**Exemplo de Resposta:**
+```json
+{
+  "success": true,
+  "message": "Mensagem enviada com sucesso!"
+}
+```
+
+---
+
+## 📋 Resumo dos Serviços
+| Serviço   | URL                     | Porta | Status                     |
+|-----------|-------------------------|-------|----------------------------|
+| Backend   | http://localhost:3001   | 3001  | ✅ Servidor Principal      |
+| Banco     | localhost:5432          | 5432  | ⚠️ PostgreSQL necessário   |
+
+---
+
+## 🧪 Testando a API
+Você pode testar os endpoints usando:
+
+### Com cURL
+```bash
+# Listar animais
+curl http://localhost:3001/api/animals
+
+# Buscar animal específico
+curl http://localhost:3001/api/animals/1
+
+# Listar depoimentos
+curl http://localhost:3001/api/testimonials
+```
+
+### Com Postman/Insomnia
+- **Base URL**: `http://localhost:3001/api`
+- Importe a coleção com os endpoints listados acima
 
 ---
 
 ## 🗃️ Banco de Dados
+O projeto utiliza PostgreSQL com as seguintes tabelas:
+- **users**: Usuários (ONGs, protetores, adotantes)
+- **animals**: Animais disponíveis para adoção
+- **testimonials**: Depoimentos de adotantes
 
-### Configuração
-1. Instale PostgreSQL
-2. Crie um banco chamado `lacos_de_pata`
-3. Execute o script `database_setup.sql`
-4. Configure as variáveis no arquivo `.env`:
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=lacos_de_pata
-DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
-PORT=3000
-```
-
----
-
-## 🧪 Testando no Postman
-
-### Exemplos por Página:
-
-#### 🏠 HOME - Animais em Destaque:
-```
-GET http://localhost:3000/api/animals/featured/animals
-```
-
-#### 📋 LISTAGEM - Todos os Animais:
-```
-GET http://localhost:3000/api/animals
-```
-
-#### 📋 LISTAGEM - Com Filtros:
-```
-GET http://localhost:3000/api/animals?species=gato&size=pequeno
-```
-
-#### 📖 DETALHES - Animal Específico:
-```
-GET http://localhost:3000/api/animals/1
-```
-
-#### 👤 SOBRE MIM - Lista de Protetores:
-```
-GET http://localhost:3000/api/users/protectors
-```
-
-#### 👤 SOBRE MIM - Protetor Específico:
-```
-GET http://localhost:3000/api/users/1
-```
-
-#### 💬 DEPOIMENTOS:
-```
-GET http://localhost:3000/api/testimonials
-```
-
----
-
-## � Fluxo das 5 Páginas
-
-### 🔄 Navegação Recomendada:
-1. **HOME**: Usar `/api/animals/featured/animals`
-2. **LISTAGEM**: Usar `/api/animals` com filtros
-3. **DETALHES**: Usar `/api/animals/:id`
-4. **SOBRE MIM**: Usar `/api/users/protectors` e `/api/users/:id`
-5. **DEPOIMENTOS**: Usar `/api/testimonials`
+O script `src/database/schema.sql` contém:
+- Estrutura completa das tabelas
+- Dados iniciais para desenvolvimento
+- Relacionamentos entre as entidades
 
 ---
 
 ## 🎯 Próximos Passos
-1. Configure o banco PostgreSQL
-2. Execute `npm start`
-3. Teste as rotas correspondentes às 5 páginas
-4. Desenvolva o front-end consumindo essas APIs
+1. Implementar autenticação JWT completa
+2. Adicionar sistema de favoritos
+3. Criar endpoint para upload de múltiplas imagens
+4. Implementar sistema de notificações
+5. Adicionar testes automatizados
 
 ---
 
-## 🗃️ Banco de Dados
+## 👥 Autor
+**Luiza Nicoluci Schettini** - [@luschettini](https://github.com/luschettini)
 
-### Configuração
-1. Instale PostgreSQL
-2. Crie um banco chamado `lacos_de_pata`
-3. Execute o script `database_setup.sql`
-4. Configure as variáveis no arquivo `.env`:
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=lacos_de_pata
-DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
-JWT_SECRET=sua_chave_secreta_jwt_muito_segura_aqui
-PORT=3000
-```
-
----
-
-## 📁 Upload de Arquivos
-- Fotos são salvas na pasta `/uploads`
-- Máximo 5MB por arquivo
-- Apenas imagens são aceitas
-- URLs de acesso: `http://localhost:3000/uploads/nome_do_arquivo`
-
----
-
-## 🧪 Testando no Postman
-
-### Passo a passo:
-1. **Criar usuário:** POST `/api/auth/register`
-2. **Fazer login:** POST `/api/auth/login` (copie o token)
-3. **Configurar Authorization:** Tipo "Bearer Token", cole o token
-4. **Testar endpoints protegidos**
-
-### Dicas:
-- Use Collection Variables no Postman para base_url e token
-- Para upload de arquivos, use form-data no Body
-- Alguns endpoints requerem tipos específicos de usuário
-
----
-
-## 📱 Tipos de Usuário e Permissões
-
-### 🏢 ONG / 👤 Protetor
-- Cadastrar animais
-- Gerenciar animais próprios
-- Ver interesses de adoção em seus animais
-- Aprovar/rejeitar interesses
-- Aprovar depoimentos
-- Gerar relatórios
-
-### 👨‍👩‍👧‍👦 Adotante
-- Ver animais disponíveis
-- Manifestar interesse em adoção
-- Criar depoimentos
-- Gerenciar próprios interesses e depoimentos
-
----
-
-## 🎯 Próximos Passos
-1. Configure o banco de dados PostgreSQL
-2. Execute `npm run dev` para iniciar o servidor
-3. Importe esta documentação no Postman
-4. Comece testando com registro e login de usuários!
+⭐ Se este projeto te ajudou, considere dar uma estrela no repositório!

@@ -10,12 +10,11 @@ console.log('📊 Configurações:', {
 });
 
 const pool = new Pool({
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 7777,  
-    database: process.env.DB_NAME || 'lacos_de_pata',
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD,
-    ssl: false
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD, 
+    port: process.env.DB_PORT,
 });
 
 module.exports = pool;
